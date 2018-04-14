@@ -17,4 +17,4 @@ def spectogram(file):
     nperseg = window_size * sample_rate / 1e3
     noverlap = step_size * sample_rate / 1e3
     _, _, spectogram = signal.spectrogram(audio, fs=sample_rate, window='hann', nperseg=int(nperseg), noverlap=int(noverlap), detrend=False)
-    return(spectogram.T)
+    return(spectogram)
