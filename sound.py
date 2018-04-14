@@ -6,13 +6,22 @@ import numpy as np
 import wave
 
 def sound(file_name):
-    s = wave.open(file_name, 'r')
+    """
+    input : wav file
 
-    nframes = s.getnframes()
-    samp_rate = s.getframerate()
-    duration = nframes / samp_rate
+    output : (audio : n frames of audio ) (framerate : sampling frequency) (duration : duration in seconde)
 
-    audio = np.frombuffer(s.readframes(-1), dtype=np.int16)
-    samp_rate = s.getframerate()
-    s.close()
-    return(audio, samp_rate, duration) # duration en seconde
+    """
+    file = wave.open(file_name, 'r')
+
+    nframes = file.getnframes()
+    framerate = file.getframerate()
+    duration = nframes / framerate
+
+    audio = np.frombuffer(file.readframes(-1), dtype=np.int16)
+
+    file.close()
+
+    return(audio, framerate, duration)
+
+print(sound("yes.wav"))
