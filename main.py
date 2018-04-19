@@ -1,12 +1,12 @@
 import numpy as np
 import tensorflow as tf
 import keras
-#from sound import sound
+from sound
 from keras.layers import Input, Dense, Add
 from keras.layers.recurrent import GRU
 from keras.models import Model
 
-# model.load_weights(models/)
+# model.load_weights('models/')
 
 NB_FREQUENCIES = 9000
 MAX_TIME_FRAMES = 500
@@ -29,4 +29,4 @@ outputs = Dense(10, activation = 'softmax')(h5)
 model = keras.models.Model(inputs=inputs, outputs=outputs)
 
 
-# model.save_weights(models/)
+# model.save_weights('models/')
