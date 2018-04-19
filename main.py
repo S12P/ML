@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 import keras
-from sound
+import sound
 from keras.layers import Input, Dense, Add
 from keras.layers.recurrent import GRU
 from keras.models import Model
