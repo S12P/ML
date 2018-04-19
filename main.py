@@ -1,13 +1,13 @@
 import numpy as np
 import tensorflow as tf
 import keras
-#from sound import sound
+from sound
 from keras.layers import Input, Dense, Add
 from keras.layers.recurrent import GRU
 from keras.models import Model
 import keras.backend as K
 
-# model.load_weights(models/)
+# model.load_weights('models/')
 
 NB_FREQUENCIES = 9000
 MAX_TIME_FRAMES = 500
@@ -35,4 +35,4 @@ model = keras.models.Model(inputs=inputs, outputs=outputs)
 model.compile(loss=ctc_loss, metrics=['accuracy'], optimizer='sgd')
 
 
-# model.save_weights(models/)
+# model.save_weights('models/')
