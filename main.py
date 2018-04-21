@@ -5,7 +5,8 @@ import sound
 from keras.layers import Input, Dense, Add
 from keras.layers.recurrent import GRU
 from keras.models import Model
-import keras.backend as Kfrom keras.optimizers import SGD
+import keras.backend as K
+from keras.optimizers import SGD
 
 
 def ctc_loss(y_true, y_pred):
