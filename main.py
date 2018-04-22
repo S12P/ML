@@ -15,7 +15,7 @@ def ctc_loss(y_true, y_pred):
 
     input_length = tf.convert_to_tensor(input_length, dtype=tf.float32)
     label_length = tf.convert_to_tensor(label_length, dtype=tf.float32)
-    return K.mean(K.ctc_batch_cost(y_true, y_pred, input_length, label_length), axis=-1)
+    return K.mean(K.ctc_batch_cost(K.batch_flatten(y_true), y_pred, input_length, label_length), axis=-1)
 
 
 # model.load_weights('models/')
@@ -24,25 +24,27 @@ NB_FREQUENCIES = 9000
 MAX_TIME_FRAMES = 500
 MAX_LABEL_SIZE = 100
 
-inputs = Input(shape=(NB_FREQUENCIES, MAX_TIME_FRAMES,))
+inputs = Input(shape=(MAX_TIME_FRAMES, NB_FREQUENCIES))
 
 h1 = Dense(64, activation='relu')(inputs)
 h2 = Dense(64, activation='relu')(h1)
 h3 = Dense(64, activation='relu')(h2)
 
-lb = GRU(64, go_backwards = True)(h3)
-lf = GRU(64)(h3)
+lb = GRU(64, go_backwards=True, return_sequences=True)(h3)
+lf = GRU(64, return_sequences=True)(h3)
 
 h4 = Add()([lb,lf]) #merge
 
 h5 = Dense(64, activation='relu')(h4)
 
-outputs = Dense(10, activation = 'softmax')(h5)
+outputs = Dense(29, activation = 'softmax')(h5)
 
 model = keras.models.Model(inputs=inputs, outputs=outputs)
+model.summary()
 
 sgd = SGD(nesterov=True)
 model.compile(loss=ctc_loss, metrics=['accuracy'], optimizer=sgd)
+
 
 
 
