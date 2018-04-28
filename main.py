@@ -2,6 +2,7 @@ import numpy as np
 import tensorflow as tf
 import keras
 import sound
+import outils_entrainement as tt # stands for train tools
 from keras.layers import Input, Dense, Add, Lambda, TimeDistributed
 from keras.layers.recurrent import GRU
 from keras.models import Model
@@ -37,10 +38,7 @@ def ctc(y_true, y_pred):
 
 # model.load_weights('models/')
 
-NB_FREQUENCIES = 4
-MAX_TIME_FRAMES = 4
-MAX_LABEL_SIZE = 100
-
+NB_FREQUENCIES = 161
 
 inputs = Input(shape=(None, NB_FREQUENCIES), name='main_input')
 labels = Input(shape=(None,), name='labels')
@@ -71,15 +69,19 @@ sgd = SGD(nesterov=True)
 
 model.compile(loss=ctc, metrics=['accuracy'], optimizer=sgd)
 
-ex1 = np.random.random_sample((4,4))
-ex2 = np.random.random_sample((4,4))
-batch = np.array([ex1, ex2])
+batch, lab, input_len, lab_len = tt.get_batch()
 
-lab = np.array([[1, 2, 3], [1, 2, 3]])
-input_len = np.array([4, 4])
-lab_len = np.array([3, 3])
+[x_train, x_test] = np.split(batch, [int(.8 * len(batch))])
+[y_train, y_test] = np.split(lab, [int(.8 * len(batch))])
+[input_len_train, input_len_test] = np.split(input_len, [int(.8 * len(batch))])
+[lab_len_train, lab_len_test] = np.split(lab_len, [int(.8 * len(batch))])
 
-model.fit([batch, lab, input_len, lab_len], lab, batch_size=2)
+
+model.fit([x_train, y_train, input_len_train, lab_len_train], y_train, batch_size=100, epochs=1)
+
+score = model.evaluate([x_test, y_test, input_len_test, lab_len_test], y_test)
+
+print('The final score is {}'.format(score))
 
 
 
