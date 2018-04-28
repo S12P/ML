@@ -1,5 +1,6 @@
 import os
 import sound
+from map_char import *
 
 #https://storage.cloud.google.com/download.tensorflow.org/data/speech_commands_v0.01.tar.gz
 
@@ -30,4 +31,9 @@ def audio_train(nom_du_dossier):
         print(dic)
     return(dic)
 
-print(audio_train(nom_du_dossier))
+
+def text_to_number(text):
+    """
+    This function takes a text and encodes it as a list of number according to the the dictionary map_char
+    """
+    return [map_char[c] for c in text]
