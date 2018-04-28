@@ -74,3 +74,15 @@ def dict_to_examples(dataset_dict):
             labels.append(text_to_number(key) + [0 for k in range(max_len_labels - len(key))])
 
     return (np.array(batch), np.array(labels))
+
+
+
+def shuffle(batch, labels):
+    """
+    This function shuffles the data
+    """
+
+    assert(len(batch) == len(labels))
+    p = np.random.permutation(len(labels))
+
+    return (batch[p], labels[p])
