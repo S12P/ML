@@ -68,12 +68,22 @@ def dict_to_examples(dataset_dict):
     # Now put all the examples in a numpy array for the features, an other array for the labels
     batch = []
     labels = []
+
+    print('Creating the batch...')
+
     for key in keys:
         for spectro in dataset_dict[key]:
             batch.append(np.concatenate([spectro, np.zeros((max_time_slices - len(spectro), nb_freqs))]))
             labels.append(text_to_number(key) + [0 for k in range(max_len_labels - len(key))])
 
-    return (np.array(batch), np.array(labels))
+    print('Done!\n')
+
+    # Create input_length array and labels_length
+    batch_size = len(batch)
+    input_length = batch_size * [max_time_slices]
+    labels_length = batch_size * [max_len_labels]
+
+    return (np.array(batch), np.array(labels), np.array(input_length), np.array(labels_length))
 
 
 
@@ -86,3 +96,16 @@ def shuffle(batch, labels):
     p = np.random.permutation(len(labels))
 
     return (batch[p], labels[p])
+
+
+def get_batch():
+    """
+    This function returns a batch
+    """
+    dictionary = audio_train(nom_du_dossier)
+
+    batch, labels, input_length, labels_length = dict_to_examples(dictionary)
+    batch, labels = shuffle(batch, labels)
+
+
+    return (batch, labels, input_length, labels_length)
