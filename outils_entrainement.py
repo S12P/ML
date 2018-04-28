@@ -16,7 +16,7 @@ def test(elmt, rm):
             return(False)
     return(True)
 
-def audio_train(nom_du_dossier):
+def audio_train(nom_du_dossier, freq):
     files = os.listdir(nom_du_dossier)
     for k in range(len(files)):
         if test(files[k], rm):
@@ -29,14 +29,14 @@ def audio_train(nom_du_dossier):
         audio = os.listdir(nom_chemin)
         for k in range(len(audio)):
             nom_fichier = nom_chemin + "/" + str(audio[k])
-            audio[k] = sound.spectogram(nom_fichier)
+            audio[k] = sound.spectogram(nom_fichier, freq)
         dic[keys] = audio
         print('Finished loading examples for {}!'.format(keys))
 
     print('All the contents of {} has been loaded!'.format(nom_du_dossier))
 
     return(dic)
-
+print(audio_train(nom_du_dossier, 200))
 
 def text_to_number(text):
     """
