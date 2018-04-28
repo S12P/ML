@@ -9,6 +9,22 @@ import keras.backend as K
 from keras.optimizers import SGD
 
 
+
+def _ctc_lambda(prediction_batch, label_batch, prediction_lengths, label_lengths):
+        #prediction_batch, label_batch, prediction_lengths, label_lengths = args
+        return K.ctc_batch_cost(y_true=label_batch, y_pred=prediction_batch,input_length=prediction_lengths, label_length=label_lengths)
+
+def ctc_loss(y_true, y_pred):
+    input_length = np.zeros((5,2)) # a changer
+    label_length = np.zeros((5,2)) # a changer
+
+    input_length = tf.convert_to_tensor(input_length, dtype=tf.float32)
+    label_length = tf.convert_to_tensor(label_length, dtype=tf.float32)
+
+    x = _ctc_lambda(y_true, y_pred, input_length, label_length)
+
+    return K.mean(x, axis=-1)
+
 def ctc_loss_lambda(args):
     y_pred, y_true, input_length, label_length = args
 
@@ -18,23 +34,28 @@ def ctc(y_true, y_pred):
     return y_pred
 
 
+
 # model.load_weights('models/')
 
 NB_FREQUENCIES = 4
 MAX_TIME_FRAMES = 4
 MAX_LABEL_SIZE = 100
 
+
 inputs = Input(shape=(None, NB_FREQUENCIES), name='main_input')
 labels = Input(shape=(None,), name='labels')
 input_length = Input(shape=(1,), name='input_length')
 label_length = Input(shape=(1,), name='label_length')
 
+
 h1 = TimeDistributed(Dense(64, activation='relu'))(inputs)
 h2 = TimeDistributed(Dense(64, activation='relu'))(h1)
 h3 = TimeDistributed(Dense(64, activation='relu'))(h2)
 
-lb = GRU(64, go_backwards=True, return_sequences=True)(h3)
-lf = GRU(64, return_sequences=True)(h3)
+
+lb = GRU(64, go_backwards = True, return_sequences = True)(h3)
+lf = GRU(64, return_sequences = True)(h3)
+
 
 h4 = Add()([lb,lf]) #merge
 
@@ -47,6 +68,7 @@ model = keras.models.Model(inputs=[inputs, labels, input_length, label_length], 
 model.summary()
 
 sgd = SGD(nesterov=True)
+
 model.compile(loss=ctc, metrics=['accuracy'], optimizer=sgd)
 
 ex1 = np.random.random_sample((4,4))
@@ -58,6 +80,7 @@ input_len = np.array([4, 4])
 lab_len = np.array([3, 3])
 
 model.fit([batch, lab, input_len, lab_len], lab, batch_size=2)
+
 
 
 # model.save_weights('models/')
