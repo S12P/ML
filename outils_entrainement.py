@@ -21,14 +21,20 @@ def audio_train(nom_du_dossier):
     for k in range(len(files)):
         if test(files[k], rm):
             dic[files[k]] = []
-    for keys in dic:
+    n = len(dic)
+
+    for (keys, i) in zip(dic, range(n)):
+        print('Loading examples for {}... [{}/{}]'.format(keys, i+1, n))
         nom_chemin = nom_du_dossier + "/" + str(keys)
         audio = os.listdir(nom_chemin)
         for k in range(len(audio)):
             nom_fichier = nom_chemin + "/" + str(audio[k])
             audio[k] = sound.spectogram(nom_fichier)
         dic[keys] = audio
-        print(dic)
+        print('Finished loading examples for {}!'.format(keys))
+
+    print('All the contents of {} has been loaded!'.format(nom_du_dossier))
+
     return(dic)
 
 
