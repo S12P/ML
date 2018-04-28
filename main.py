@@ -10,22 +10,6 @@ import keras.backend as K
 from keras.optimizers import SGD
 
 
-
-def _ctc_lambda(prediction_batch, label_batch, prediction_lengths, label_lengths):
-        #prediction_batch, label_batch, prediction_lengths, label_lengths = args
-        return K.ctc_batch_cost(y_true=label_batch, y_pred=prediction_batch,input_length=prediction_lengths, label_length=label_lengths)
-
-def ctc_loss(y_true, y_pred):
-    input_length = np.zeros((5,2)) # a changer
-    label_length = np.zeros((5,2)) # a changer
-
-    input_length = tf.convert_to_tensor(input_length, dtype=tf.float32)
-    label_length = tf.convert_to_tensor(label_length, dtype=tf.float32)
-
-    x = _ctc_lambda(y_true, y_pred, input_length, label_length)
-
-    return K.mean(x, axis=-1)
-
 def ctc_loss_lambda(args):
     y_pred, y_true, input_length, label_length = args
 
@@ -33,7 +17,6 @@ def ctc_loss_lambda(args):
 
 def ctc(y_true, y_pred):
     return y_pred
-
 
 
 # model.load_weights('models/')
@@ -55,7 +38,7 @@ lb = GRU(64, go_backwards = True, return_sequences = True)(h3)
 lf = GRU(64, return_sequences = True)(h3)
 
 
-h4 = Add()([lb,lf]) #merge
+h4 = Add()([lb,lf]) # add the two layers
 
 h5 = TimeDistributed(Dense(64, activation='relu'))(h4)
 h6 = TimeDistributed(Dense(29, activation='softmax'))(h5)
@@ -82,7 +65,6 @@ model.fit([x_train, y_train, input_len_train, lab_len_train], y_train, batch_siz
 score = model.evaluate([x_test, y_test, input_len_test, lab_len_test], y_test)
 
 print('The final score is {}'.format(score))
-
 
 
 # model.save_weights('models/')
