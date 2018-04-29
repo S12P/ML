@@ -44,28 +44,31 @@ lf = GRU(128, return_sequences = True)(h3)
 h4 = Add()([lb,lf]) # add the two layers
 
 h5 = TimeDistributed(Dense(128, activation=clipped_relu))(h4)
-h6 = TimeDistributed(Dense(29, activation='softmax'))(h5)
+h6 = TimeDistributed(Dense(29, activation='softmax'), name='aux_output')(h5)
 
-loss_out = Lambda(ctc_loss_lambda, output_shape=(1, ))([h6, labels, input_length, label_length])
+loss_out = Lambda(ctc_loss_lambda, output_shape=(1, ), name='main_output')([h6, labels, input_length, label_length])
 
-model = keras.models.Model(inputs=[inputs, labels, input_length, label_length], outputs=loss_out)
+model = keras.models.Model(inputs=[inputs, labels, input_length, label_length], outputs=[loss_out, h6])
 model.summary()
 
 sgd = SGD(nesterov=True)
 
-model.compile(loss=ctc, metrics=['accuracy'], optimizer=sgd)
+model.compile(loss={'main_output': ctc, 'aux_output': lambda x, y: K.constant([0])}, metrics=['accuracy'], optimizer=sgd)
 
 batch, lab, input_len, lab_len = tt.get_batch()
 
-[x_train, x_test] = np.split(batch, [int(.8 * len(batch))])
-[y_train, y_test] = np.split(lab, [int(.8 * len(batch))])
-[input_len_train, input_len_test] = np.split(input_len, [int(.8 * len(batch))])
-[lab_len_train, lab_len_test] = np.split(lab_len, [int(.8 * len(batch))])
+size_training_set = int(.8 * len(batch))
+print('The training set is of size {}\n'.format(size_training_set))
+
+[x_train, x_test] = np.split(batch, [size_training_set])
+[y_train, y_test] = np.split(lab, [size_training_set])
+[input_len_train, input_len_test] = np.split(input_len, [size_training_set])
+[lab_len_train, lab_len_test] = np.split(lab_len, [size_training_set])
 
 
-model.fit([x_train, y_train, input_len_train, lab_len_train], y_train, batch_size=100, epochs=3)
+model.fit([x_train, y_train, input_len_train, lab_len_train], [y_train, x_train], batch_size=100, epochs=1)
 
-score = model.evaluate([x_test, y_test, input_len_test, lab_len_test], y_test)
+score = model.evaluate([x_test, y_test, input_len_test, lab_len_test], [y_test, x_test])
 
 print('The final score is {}'.format(score))
 
