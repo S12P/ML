@@ -18,6 +18,9 @@ def ctc_loss_lambda(args):
 def ctc(y_true, y_pred):
     return y_pred
 
+def clipped_relu(x):
+    return keras.activations.relu(x, max_value=20)
+
 
 # model.load_weights('models/')
 
@@ -29,18 +32,18 @@ input_length = Input(shape=(1,), name='input_length')
 label_length = Input(shape=(1,), name='label_length')
 
 
-h1 = TimeDistributed(Dense(64, activation='relu'))(inputs)
-h2 = TimeDistributed(Dense(64, activation='relu'))(h1)
-h3 = TimeDistributed(Dense(64, activation='relu'))(h2)
+h1 = TimeDistributed(Dense(128, activation=clipped_relu))(inputs)
+h2 = TimeDistributed(Dense(128, activation=clipped_relu))(h1)
+h3 = TimeDistributed(Dense(128, activation=clipped_relu))(h2)
 
 
-lb = GRU(64, go_backwards = True, return_sequences = True)(h3)
-lf = GRU(64, return_sequences = True)(h3)
+lb = GRU(128, go_backwards = True, return_sequences = True)(h3)
+lf = GRU(128, return_sequences = True)(h3)
 
 
 h4 = Add()([lb,lf]) # add the two layers
 
-h5 = TimeDistributed(Dense(64, activation='relu'))(h4)
+h5 = TimeDistributed(Dense(128, activation=clipped_relu))(h4)
 h6 = TimeDistributed(Dense(29, activation='softmax'))(h5)
 
 loss_out = Lambda(ctc_loss_lambda, output_shape=(1, ))([h6, labels, input_length, label_length])
@@ -60,7 +63,7 @@ batch, lab, input_len, lab_len = tt.get_batch()
 [lab_len_train, lab_len_test] = np.split(lab_len, [int(.8 * len(batch))])
 
 
-model.fit([x_train, y_train, input_len_train, lab_len_train], y_train, batch_size=100, epochs=1)
+model.fit([x_train, y_train, input_len_train, lab_len_train], y_train, batch_size=100, epochs=3)
 
 score = model.evaluate([x_test, y_test, input_len_test, lab_len_test], y_test)
 
