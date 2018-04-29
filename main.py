@@ -16,7 +16,7 @@ def ctc_loss_lambda(args):
     return K.ctc_batch_cost(y_true, y_pred, input_length, label_length)
 
 def ctc(y_true, y_pred):
-    return y_pred
+    return K.mean(y_pred)
 
 def clipped_relu(x):
     return keras.activations.relu(x, max_value=20)
