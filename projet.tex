@@ -3,7 +3,11 @@
 
 
 \usepackage{scicite}
-
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{caption} 
+\usepackage{subfigure}
+\usepackage{float}
 
 
 \usepackage{times}
@@ -77,10 +81,24 @@
 
 \section*{Introduction}
 
+We have implemented this artcile \cite{article} with python3, Keras and Tensorflow. The neuron network used is not common. So we created our own neuron network model.
 
+\section*{Model}
+We have seven layers of neuron. The three first layers are computed by :
 
+\[ h_t^{(l)} = g(W^{(l)}h_t^{(l-1} + b^{(l)} \]
 
-\bibliography{scibib}
+where $g(z) =$ min\{max $\{0,z\}, 20\}$
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[scale=0.15]{images/photo.jpg}
+\end{center}
+\end{figure}
+
+\section*{?}
+
+\bibliography{scicite}
 
 \bibliographystyle{Science}
 
