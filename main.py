@@ -23,7 +23,6 @@ def clipped_relu(x):
     return keras.activations.relu(x, max_value=20)
 
 
-# model.load_weights('models/')
 
 NB_FREQUENCIES = 161
 
@@ -51,6 +50,8 @@ loss_out = Lambda(ctc_loss_lambda, output_shape=(1, ), name='main_output')([h6, 
 
 model = keras.models.Model(inputs=[inputs, labels, input_length, label_length], outputs=[loss_out, h6])
 model.summary()
+
+model.load_weights('models/my_model_weights.h5')
 
 sgd = SGD(nesterov=True)
 
