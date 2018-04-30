@@ -109,3 +109,16 @@ def get_batch():
 
 
     return (batch, labels, input_length, labels_length)
+
+
+def get_sound_examples(dirname, freq=200):
+    spectrograms = []
+    audio = os.listdir(dirname)
+    for k in range(len(audio)):
+        filename = dirname + "/" + str(audio[k])
+        audio[k] = sound.spectogram(filename, freq)
+
+    examples = dict()
+    examples['tests'] = audio
+
+    return dict_to_examples(examples)
