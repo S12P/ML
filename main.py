@@ -8,6 +8,7 @@ from keras.layers.recurrent import GRU
 from keras.models import Model
 import keras.backend as K
 from keras.optimizers import SGD
+from keras.models import load_model
 
 
 def ctc_loss_lambda(args):
@@ -72,5 +73,5 @@ score = model.evaluate([x_test, y_test, input_len_test, lab_len_test], [y_test, 
 
 print('The final score is {}'.format(score))
 
-
-model.save_weights('models/')
+model.save('models/my_model.h5')
+model.save_weights('models/my_model_weights.h5')
