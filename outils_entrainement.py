@@ -38,6 +38,11 @@ def audio_train(nom_du_dossier, freq=200):
 
     return(dic)
 
+def get_one_example(path, freq=200):
+    spectro = sound.spectogram(path, freq)
+
+    return (np.array([spectro]), np.array([[""]]), np.array([len(spectro)]), np.array([0]))
+
 def text_to_number(text):
     """
     This function takes a text and encodes it as a list of number according to the the dictionary map_char
