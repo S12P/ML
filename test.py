@@ -78,7 +78,7 @@ else:
 
     print('The final score is {}'.format(score))
 
-batch, lab, input_len, lab_len = tt.get_sound_examples('examples')
+batch, lab, input_len, lab_len = tt.get_one_example(fichier)
 out = K.ctc_decode(model.predict([batch, lab, input_len, lab_len])[1], input_len)
 
 print(K.eval(out[0]))
