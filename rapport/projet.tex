@@ -1,4 +1,3 @@
-
 \documentclass[12pt]{article}
 
 
@@ -8,8 +7,8 @@
 \usepackage{caption} 
 \usepackage{subfigure}
 \usepackage{float}
-
-
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{times}
 
 
@@ -74,7 +73,8 @@
 % Place your abstract within the special {sciabstract} environment.
 
 \begin{sciabstract}
-  This document present our project in machine learning. We have implemented a voice recognition system. We use python3, Keras and Tensorflow.
+  This document present our project in machine learning. We have implemented a voice recognition system i.e. our program is able to recognize spoken language and translate into text by computers.
+ We use python3, Keras and Tensorflow.
 \end{sciabstract}
 
 
@@ -88,15 +88,31 @@ We have seven layers of neuron. The three first layers are computed by :
 
 \[ h_t^{(l)} = g(W^{(l)}h_t^{(l-1} + b^{(l)} \]
 
-where $g(z) =$ min\{max $\{0,z\}, 20\}$
+where $g(z) =$ min\{max $\{0,z\}, 20\}$ and $W^{(l)}, b^{l}$ are the weight matrix and bias parameters for layers $l$.
+
+The fourth layer is a bi-directional reccurent layer. This layer includes two sets of hidden units : a set with forward reccurence, $h^{f}$, and a set with backward recurrence $h^{b}$ : 
+
+\[ h_t^{(f)} = g(W^{(4)}h_t^{(3)} + W_r^{(f)}h_{t-1}^{(f)} + b^{(4)} \]
+
+\[ h_t^{(b)} = g(W^{(4)}h_t^{(3)} + W_r^{(b)}h_{t+1}^{(b)} + b^{(4)} \]
+
+The fifth (non-recurrent) layer takes both the forward and backward units as inputs $h_t^{(5)} = g(W^{(5)}h_t^{(4)} + b^{(5)} $ where $h_t^{(4)} = h_t^{(f)} + h_t^{(b)}$. The output layer is a standar softmax function that yields the predicted character probabilities for each time slice $t$ and character $k$ in the alphabet :
+
+\[ h_{t,k}^{(6)} \equiv \mathbb{P}(c_t=k | x) = \frac{exp(W_k^{(6)}h_t^{(5)} + b_k^{(6)}}{\sum_j exp(W_j^{(6)}h_t^{(5)} + b_j^{(6)}} \]
+
 
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.15]{images/photo.jpg}
+\caption{Structur of our RNN model}
 \end{center}
+
 \end{figure}
 
-\section*{?}
+\section*{Our work}
+
+This article \cite{article} create a new model and use a ctc loss function. So to create this model, we have customized our model so that it is like on the article. For that we had to work a lot on the documentation of keras and tensorflow. However our main problem was the ctc loss function but finally everything is good.
+
 
 \bibliography{scicite}
 
