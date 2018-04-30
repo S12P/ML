@@ -41,7 +41,7 @@ def audio_train(nom_du_dossier, freq=200):
 def get_one_example(path, freq=200):
     spectro = sound.spectogram(path, freq)
 
-    return (np.array([spectro]), np.array([[""]]), np.array([len(spectro)]), np.array([0]))
+    return (np.array([spectro]), np.array([[0]]), np.array([len(spectro)]), np.array([[1]]))
 
 def text_to_number(text):
     """
@@ -57,7 +57,7 @@ def int_list_to_text(int_list):
     for c in int_list:
         str = str + int_to_char[c]
 
-    return stc
+    return str
 
 
 def dict_to_examples(dataset_dict):

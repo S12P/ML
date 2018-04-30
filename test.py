@@ -82,4 +82,6 @@ else:
 batch, lab, input_len, lab_len = tt.get_sound_examples('examples')
 out = K.ctc_decode(model.predict([batch, lab, input_len, lab_len])[1], input_len)
 
-print(K.eval(out[0][0]))
+E = K.eval(out[0][0])
+for k in range(len(E)):
+    print(tt.int_list_to_text(E[k]))
