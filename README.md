@@ -10,3 +10,4 @@ To train the model it is necessary to put the file of the audio files in the fil
 And then we can train the model with :
 
 python3 main.py
+
