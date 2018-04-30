@@ -40,7 +40,6 @@
 {\end{list}}
 
 
-% Include your paper's title here
 
 \title{Deep speech} 
 
@@ -48,13 +47,11 @@
 \author
 {Vincent R\'ebiscoul, St\'ephane Pouget and Florent Gu\'epin}
 
-% Include the date command, but leave its argument blank.
 
 \date{}
 
 
 
-%%%%%%%%%%%%%%%%% END OF PREAMBLE %%%%%%%%%%%%%%%%
 
 
 
@@ -81,11 +78,17 @@
 
 \section*{Introduction}
 
-We have implemented this article \cite{article} with python3, Keras and Tensorflow. The neuralx network used is not common. So we created our own neural network model.
+We have implemented this article \cite{article} with python3, Keras and Tensorflow. The neural network used is not common. So we created our own neural network model.
 
 \section{Model}
 
 \subsection{Topology of the model}
+
+The core of the system is a recurrent neural network trained to ingest speech spectograms and generate English text transcriptions.
+
+Let a single utterance $x$ and label $y$ be sampled from a
+training set $X = \{(x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), . . .\}. $ Each utterance, $x^{(i)}$, is a time-series of length $T^{(i)}$
+where every time-slice is a vector of audio features, $x^{(i)}$ ,$ t = 1, . . . , T^{(i)}$ . We use spectrograms as our features, so $x^{(i)}_{t,p}$ denotes the power of the $p$’th frequency bin in the audio frame at time t. The goal of our RNN is to convert an input sequence $x$ into a sequence of character probabilities for the transcription $y$, with $ \hat{y}= \mathbb{P}(c_t |x),$ where $c \in \{a,b,c, . . . , z, space, apostrophe, blank\}.$
 
 We have seven layers of neuron. The three first layers are computed by :
 
@@ -106,7 +109,7 @@ The fifth (non-recurrent) layer takes both the forward and backward units as inp
 
 \begin{figure}[H]
   \begin{center}
-    \includegraphics[scale=0.20]{images/photo.jpg}
+    \includegraphics[scale=0.27]{images/photo.jpg}
     \caption{Structure of our RNN model}
   \end{center}
 \end{figure}
@@ -125,9 +128,28 @@ This article \cite{article} create a new model and use a ctc loss function. So t
 
 The dataset that we used is not composed of sentences or expressions but of words. The idea was to have easily trainable neural network that could work quickly and would be able to recognize at least some words. Indeed, in the article they say they managed to have a solid working neural network but using several optimisations and with 5000 hours of training. This seemed too much for machine learning rookies. Obviously this makes a neural network weak when you train it on sentences but it works better on words (at least the words where the neural network has been trained on).
 
+\subsection{Our results}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.4]{images/image2.png}
+    \caption{Result after a training of 4 epochs}
+  \end{center}
+\end{figure}
+
+\begin{figure}[H]
+  \begin{center}
+    \includegraphics[scale=0.9]{images/image3.png}
+    \caption{Result after a training of 20 epochs}
+  \end{center}
+\end{figure}
+
+This were 2 examples of a training session of our neural network. On the second one, several intersting things happend, we can notice : our neural network is able to learn efficiency after the 12th epochs, before he's not able to distinguish efficiently. We also have to make a test over more epochs (something like 200), to see a good learning from our neural network. 
+Here, we used 3 words, with more than 5100 files. At the end, our neural network is able to know 5/100 words of people. It's pretty bad for a neural network, but it's only with 20 epochs! 
+Now, we will try to do it with more than 200 epochs.
+
 \bibliography{scicite}
 
 \bibliographystyle{Science}
-s
-\end{document}
 
+\end{document}
