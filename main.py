@@ -8,7 +8,7 @@ from keras.layers.recurrent import GRU
 from keras.models import Model
 import keras.backend as K
 from keras.optimizers import SGD
-
+from keras.models import load_model
 
 def ctc_loss_lambda(args):
     y_pred, y_true, input_length, label_length = args
@@ -72,9 +72,11 @@ score = model.evaluate([x_test, y_test, input_len_test, lab_len_test], [y_test, 
 
 print('The final score is {}'.format(score))
 
+model.save('my_model.h5')
+model.save_weights('my_model_weights.h5')
+
 batch, lab, input_len, lab_len = tt.get_sound_examples('examples')
 out = K.ctc_decode(model.predict([batch, lab, input_len, lab_len])[1], input_len)
 
 print(K.eval(out[0]))
 
-# model.save_weights('models/')
