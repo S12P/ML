@@ -15,3 +15,4 @@ To test it is necessary to put the audio files in the folder examples and execut
 
 python3 test.py
 
+If you want to calculate again the weigth change b to False in test.py
