@@ -10,7 +10,6 @@ import keras.backend as K
 from keras.optimizers import SGD
 from keras.models import load_model
 
-
 def ctc_loss_lambda(args):
     y_pred, y_true, input_length, label_length = args
 
@@ -23,6 +22,7 @@ def clipped_relu(x):
     return keras.activations.relu(x, max_value=20)
 
 
+# model.load_weights('models/')
 
 NB_FREQUENCIES = 161
 
@@ -50,11 +50,9 @@ loss_out = Lambda(ctc_loss_lambda, output_shape=(1, ), name='main_output')([h6, 
 
 model = keras.models.Model(inputs=[inputs, labels, input_length, label_length], outputs=[loss_out, h6])
 model.summary()
-
-model.load_weights('models/my_model_weights.h5')
-
+model.load_weights('my_model_weights.h5')
 sgd = SGD(nesterov=True)
-
+"""
 model.compile(loss={'main_output': ctc, 'aux_output': lambda x, y: K.constant([0])}, metrics=['accuracy'], optimizer=sgd)
 
 batch, lab, input_len, lab_len = tt.get_batch()
@@ -73,11 +71,10 @@ model.fit([x_train, y_train, input_len_train, lab_len_train], [y_train, x_train]
 score = model.evaluate([x_test, y_test, input_len_test, lab_len_test], [y_test, x_test])
 
 print('The final score is {}'.format(score))
-
-model.save('models/my_model.h5')
-model.save_weights('models/my_model_weights.h5')
+"""
 
 batch, lab, input_len, lab_len = tt.get_sound_examples('examples')
 out = K.ctc_decode(model.predict([batch, lab, input_len, lab_len])[1], input_len)
+print(out)
+print(K.eval(out[0][0]))
 
-print(K.eval(out[0]))
