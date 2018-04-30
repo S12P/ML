@@ -11,9 +11,8 @@ from keras.optimizers import SGD
 from keras.models import load_model
 import sys
 
-arg = sys.argv
-fichier = str(arg[1])
-b=True
+#arg = sys.argv
+#fichier = str(arg[1])
 
 def ctc_loss_lambda(args):
     y_pred, y_true, input_length, label_length = args
@@ -79,7 +78,7 @@ else:
 
     print('The final score is {}'.format(score))
 
-batch, lab, input_len, lab_len = tt.get_one_example(fichier)
+batch, lab, input_len, lab_len = tt.get_sound_examples('examples')
 out = K.ctc_decode(model.predict([batch, lab, input_len, lab_len])[1], input_len)
 
-print(K.eval(out[0]))
+print(K.eval(out[0][0]))
