@@ -13,6 +13,7 @@ import sys
 
 #arg = sys.argv
 #fichier = str(arg[1])
+b=True
 
 def ctc_loss_lambda(args):
     y_pred, y_true, input_length, label_length = args
