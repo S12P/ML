@@ -9,5 +9,9 @@ To train the model it is necessary to put the file of the audio files in the fil
 
 And then we can train the model with :
 
-python3 main.py
+python3 train.py
+
+To test it is necessary to put the files in the folder examples and execute :
+
+python3 test.py
 
