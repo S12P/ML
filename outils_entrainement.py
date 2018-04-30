@@ -44,6 +44,16 @@ def text_to_number(text):
     """
     return [map_char[c] for c in text]
 
+def int_list_to_text(int_list):
+    """
+    This function takes an it list which encodes a string and returns the associated string
+    """
+    str = ""
+    for c in int_list:
+        str = str + int_to_char[c]
+
+    return stc
+
 
 def dict_to_examples(dataset_dict):
     """
